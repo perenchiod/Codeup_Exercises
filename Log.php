@@ -2,13 +2,13 @@
 	
 	class Log 
 	{
-		public $filename;
-		public $handle;
+		protected $filename;
+		private $handle;
 
-		public function __construct($prefix = "log") 
+		public function __construct($prefix) 
 		{
-			$this->filename = "$prefix" . date("y-m-d") . ".log";
-			$this->handle = fopen($this->filename, "a");
+			$this->setFileName($prefix);
+			$this->handle = fopen($this->getFilename(), "a");
 		} 
 
 		public function logMessage($message) 
@@ -29,10 +29,32 @@
 			$message = "Logging had an error!";
 			$this->logMessage($message);
 		}
+
+		protected function setFileName($prefix = "log")
+		{
+			if(is_string($prefix)){
+				$this->filename = "$prefix" . date("y-m-d") . ".log";
+			} else {
+				die("No good! Prefix is not a string, DIE!");
+			}
+
+			if(!is_writable($this->filename) && !touch($this->filename) ) {
+				die("Filename can't be written. DIE!");
+			}
+		}
+
+		protected function getFileName()
+		{
+			return $this->filename;
+		}
+
 		public function __destruct() 
 		{
-			fclose($this->handle);
+			if(isset($this->handle)) {
+				fclose($this->handle);
+			}
 		}
+
 	
 	}
 

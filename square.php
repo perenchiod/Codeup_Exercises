@@ -3,16 +3,20 @@
 	
 	class Square extends Rectangle
 	{
-		public $side;
 
-		public function __construct($side)
+		public function __construct($height)
 		{
-			$this->side = $side;
+			parent::__construct($height);
 		}
 
-		public function perimeter ()
+		public function perimeter()
 		{
-			return $this->side * 4;
+			return $this->getHeight() * 4;
+		}
+
+		public function area() 
+		{
+			return $this->getHeight() * $this->getHeight(); 
 		}
 	}
 
